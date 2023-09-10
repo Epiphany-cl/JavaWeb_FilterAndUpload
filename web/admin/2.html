@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body style="margin: 0;">
+		<canvas id="bg"></canvas>
+	</body>
+</html>
+<script>
+	const cvs = document.getElementById("bg");
+
+	//获取窗口尺寸
+	const width = window.innerWidth;
+	const heigth = window.innerHeight;
+	//设置canvas尺寸
+	cvs.width = width;
+	cvs.height = heigth;
+	//获取绘制上下文
+	const ctx = cvs.getContext("2d");
+	//字体大小
+	const fontSize = 20;
+	//列宽
+	const columnWidth = fontSize;
+	//列数 
+	const columnCount = Math.floor(width / columnWidth);
+	//每一列文字的位置
+	const nextChar = new Array(columnCount).fill(0);
+
+	//画一排
+	function draw() {
+		ctx.fillStyle = 'rgba(0,0,0,0.1)'; //变淡
+		ctx.fillRect(0, 0, width, heigth);
+		for (var i = 0; i < columnCount; i++) {
+			ctx.fillStyle = getRandomColor(); //颜色
+			const char = gerRandomChar(); //文字
+			ctx.font = '${fontSize}px "Roboto Mono"'; //字体与大小
+			const x = i * columnWidth; //位置
+			const y = (nextChar[i] + 1) * fontSize;
+			ctx.fillText(char, x, y); //填充文字
+			if (y > heigth && Math.random() > 0.99) {
+				nextChar[i] = 0;
+			} else {
+				nextChar[i]++;
+			}
+		}
+	}
+
+	//随机颜色
+	function getRandomColor() {
+		// 随机生成RGB值
+		const r = Math.floor(Math.random() * 256);
+		const g = Math.floor(Math.random() * 256);
+		const b = Math.floor(Math.random() * 256);
+
+		// 将RGB值转换成十六进制形式
+		const hexR = r.toString(16).padStart(2, '0');
+		const hexG = g.toString(16).padStart(2, '0');
+		const hexB = b.toString(16).padStart(2, '0');
+
+		// 返回十六进制颜色值
+		return `#${hexR}${hexG}${hexB}`;
+	}
+
+	//随机文字
+	function gerRandomChar() {
+		// 定义包含所有可能字符的字符串
+		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+		// 随机生成一个索引，范围在0到chars的长度之间
+		const randomIndex = Math.floor(Math.random() * chars.length);
+
+		// 返回随机字符
+		return chars[randomIndex];
+	}
+	
+	draw();
+	
+	setInterval(draw,30);
+</script>
